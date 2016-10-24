@@ -32,18 +32,13 @@ object Solver {
         .map(seq => Solver.fuseWithReverse(reachedEnd)(result, seq).map((seq, _)))
         .dropWhile(_.isEmpty).headOption.flatMap(identity)
 
-      newResult match {
-        case Some((oldSeq, newResult)) => {
+      (newResult, reachedEnd) match {
+        case (Some((oldSeq, newResult)), _) => {
           result = newResult
           remainingSequences -= oldSeq
         }
-        case None => {
-          if (!reachedEnd) {
-            reachedEnd = true
-          } else {
-            return None
-          }
-        }
+        case (None, false) => { reachedEnd = true }
+        case (None, true) => { return None }
       }
     }
 
