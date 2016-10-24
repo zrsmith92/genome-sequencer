@@ -1,5 +1,6 @@
 package xyz.driver.fasta.parser
 
+import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 import xyz.driver.fasta.model._
 
@@ -40,13 +41,13 @@ object Parser {
   def fromFile(file: Source): Option[Seq[NucleotideSequence]] = {
     var sequences: Seq[NucleotideSequence] = Seq()
     var currentDescription: Option[String] = None
-    var currentNucleotides: Seq[Nucleotide.Value] = Seq()
+    var currentNucleotides: ArrayBuffer[Nucleotide.Value] = ArrayBuffer()
 
     def addAndResetCurrentNucleotideSequence() {
       if (currentDescription.isDefined && currentNucleotides.length > 0) {
         sequences :+= NucleotideSequence(currentDescription.get, currentNucleotides)
       }
-      currentNucleotides = Seq()
+      currentNucleotides = ArrayBuffer()
       currentDescription = None
     }
 

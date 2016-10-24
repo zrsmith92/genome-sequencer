@@ -1,10 +1,10 @@
 package xyz.driver.fasta.solver
 
-import scala.collection.mutable.Set
+import scala.collection.mutable.{ArrayBuffer, Set}
 import xyz.driver.fasta.model._
 
 object Solver {
-  def fuse(a: Seq[Nucleotide.Value], b: Seq[Nucleotide.Value]): Option[Seq[Nucleotide.Value]] = {
+  def fuse(a: ArrayBuffer[Nucleotide.Value], b: ArrayBuffer[Nucleotide.Value]): Option[ArrayBuffer[Nucleotide.Value]] = {
     val shorterLength = math.min(a.length, b.length)
     val half: Int = shorterLength / 2
     (half to shorterLength).find { n =>
@@ -14,7 +14,7 @@ object Solver {
     }
   }
 
-  def fuseWithReverse(reverse: Boolean)(a: Seq[Nucleotide.Value], b: Seq[Nucleotide.Value]): Option[Seq[Nucleotide.Value]] = {
+  def fuseWithReverse(reverse: Boolean)(a: ArrayBuffer[Nucleotide.Value], b: ArrayBuffer[Nucleotide.Value]): Option[ArrayBuffer[Nucleotide.Value]] = {
     if (reverse) {
       Solver.fuse(b, a)
     } else {
@@ -23,12 +23,12 @@ object Solver {
   }
 
   def solveSequence(sequences: Seq[NucleotideSequence]): Option[Seq[Nucleotide.Value]] = {
-    var result: Seq[Nucleotide.Value] = sequences.head.nucleotides
-    val remainingSequences = Set(sequences.tail.map(_.nucleotides): _*)
+    var result: ArrayBuffer[Nucleotide.Value] = sequences.head.nucleotides.to[ArrayBuffer]
+    val remainingSequences = Set(sequences.tail.map(_.nucleotides.to[ArrayBuffer]): _*)
 
     var reachedEnd: Boolean = false
     while (!remainingSequences.isEmpty) {
-      val newResult: Option[(Seq[Nucleotide.Value], Seq[Nucleotide.Value])] = remainingSequences.toStream
+      val newResult: Option[(ArrayBuffer[Nucleotide.Value], ArrayBuffer[Nucleotide.Value])] = remainingSequences.toStream
         .map(seq => Solver.fuseWithReverse(reachedEnd)(result, seq).map((seq, _)))
         .dropWhile(_.isEmpty).headOption.flatMap(identity)
 
