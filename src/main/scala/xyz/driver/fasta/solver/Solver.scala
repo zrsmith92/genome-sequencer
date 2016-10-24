@@ -24,7 +24,7 @@ object Solver {
 
   def solveSequence(sequences: Seq[NucleotideSequence]): Option[Seq[Nucleotide.Value]] = {
     var result: ArrayBuffer[Nucleotide.Value] = sequences.head.nucleotides.to[ArrayBuffer]
-    val remainingSequences = Set(sequences.tail.map(_.nucleotides.to[ArrayBuffer]): _*)
+    val remainingSequences = sequences.tail.map(_.nucleotides.to[ArrayBuffer]).to[Set]
 
     var reachedEnd: Boolean = false
     while (!remainingSequences.isEmpty) {
