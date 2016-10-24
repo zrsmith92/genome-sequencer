@@ -23,8 +23,14 @@ object Solver {
   }
 
   def solveSequence(sequences: Seq[NucleotideSequence]): Option[Seq[Nucleotide.Value]] = {
-    var result: ArrayBuffer[Nucleotide.Value] = sequences.head.nucleotides.to[ArrayBuffer]
-    val remainingSequences = sequences.tail.map(_.nucleotides.to[ArrayBuffer]).to[Set]
+    val sortedSequences = try {
+      sequences.sortBy(_.tlsh)
+    } catch {
+      // The TLSH algorithm throws an exception if the input data isn't long enough or complex enough
+      case _: Exception => sequences
+    }
+    var result: ArrayBuffer[Nucleotide.Value] = sortedSequences.head.nucleotides.to[ArrayBuffer]
+    val remainingSequences = sortedSequences.tail.map(_.nucleotides.to[ArrayBuffer]).to[Set]
 
     var reachedEnd: Boolean = false
     while (!remainingSequences.isEmpty) {

@@ -43,7 +43,7 @@ object Main {
   def printUsageAndExit() {
     System.err.println("""
 USAGE:
-  executable /path/to/fasta_file.txt
+  sbt "run /path/to/fasta_file.txt"
 """)
     System.exit(1)
   }
