@@ -1,9 +1,11 @@
 package xyz.driver.fasta.Solver
 
 import scala.collection.mutable.ArrayBuffer
+import scala.io.Source
 import org.scalatest._
 import xyz.driver.fasta.model._
 import xyz.driver.fasta.model.Nucleotide._
+import xyz.driver.fasta.parser.Parser
 import xyz.driver.fasta.solver.Solver
 
 class SolverSpec extends FlatSpec with Matchers {
@@ -61,5 +63,19 @@ class SolverSpec extends FlatSpec with Matchers {
     Solver.solveSequence(Seq(b, c, a, d)) should be (Some(ArrayBuffer(
       A, C, G, T, A, C, T, G, T, A, G, G, A, C, A, C, G, T, G, T
     )))
+  }
+
+  it should "solve the original test case provided by Driver" in {
+    val source = Source.fromString(""">Frag_56
+ATTAGACCTG
+>Frag_57
+CCTGCCGGAA
+>Frag_58
+AGACCTGCCG
+>Frag_59
+GCCGGAATAC
+""")
+    val sequence = Parser.fromFile(source).get
+    Solver.solveSequence(sequence) should be (Some(Seq(A,T,T,A,G,A,C,C,T,G,C,C,G,G,A,A,T,A,C)))
   }
 }
