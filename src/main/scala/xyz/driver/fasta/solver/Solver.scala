@@ -4,6 +4,10 @@ import scala.collection.mutable.{ArrayBuffer, Set}
 import xyz.driver.fasta.model._
 
 object Solver {
+  /** fuse takes two sequences, a and b, and tries to append b to the end of a,
+   *  if they overlap by more than half. It returns the resulting fused sequence
+   *  if successful, and None if not.
+   */
   def fuse(a: ArrayBuffer[Nucleotide.Value], b: ArrayBuffer[Nucleotide.Value]): Option[ArrayBuffer[Nucleotide.Value]] = {
     val shorterLength = math.min(a.length, b.length)
     val half: Int = shorterLength / 2
@@ -14,6 +18,10 @@ object Solver {
     }
   }
 
+  /** fuseWithReverse runs fuse on the sequences a and b, but optionally swaps
+   *  the two sequences before fusing, allowing be to be prepended to a instead
+   *  of appended
+   */
   def fuseWithReverse(reverse: Boolean)(a: ArrayBuffer[Nucleotide.Value], b: ArrayBuffer[Nucleotide.Value]): Option[ArrayBuffer[Nucleotide.Value]] = {
     if (reverse) {
       Solver.fuse(b, a)
@@ -22,6 +30,10 @@ object Solver {
     }
   }
 
+  /** solveSequence takes in a list of nucleotide sequences (fragments) and returns
+   *  the resulting fully-constructed sequence if the fragments can be successfully
+   *  put together, and None if not.
+   */
   def solveSequence(sequences: Seq[NucleotideSequence]): Option[Seq[Nucleotide.Value]] = {
     val sortedSequences = try {
       sequences.sortBy(_.tlsh)

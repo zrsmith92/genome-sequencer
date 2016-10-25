@@ -21,3 +21,10 @@ Any recent version of Scala and sbt should be fine to run this. The program can 
 ```bash
 $ sbt "run /path/to/fasta_file.txt"
 ```
+## Testing
+
+To run the unit tests for the solver and parser, run:
+
+```bash
+$ sbt test
+```
